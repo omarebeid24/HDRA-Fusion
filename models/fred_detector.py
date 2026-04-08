@@ -19,7 +19,7 @@ Required artifacts in FRED_MODEL_DIR:
     tab_scaler_LOSO_<fold>.pkl       — StandardScaler for tabular features
 
 Dependencies:
-    xzy2.py must be present in the same directory as this file or importable
+    fred_fusion_core.py must be present in the same directory as this file or importable
     from sys.path. It provides DomainAdversarialCLIP and TabularExtractor.
 
 References
@@ -51,34 +51,33 @@ from configs.config import DEVICE, FRED_FOLD, FRED_MODEL_DIR
 from models.clip_extractor import SimpleImageDataset
 
 
-def _import_xzy2():
-    """
-    Import core classes from xzy2.py.
+def _import_fred_fusion_core():
+    
+    # Import core classes from fred_fusion_core.py.
 
-    xzy2.py must be placed in the project root or be importable from sys.path.
-    It provides DomainAdversarialCLIP and TabularExtractor used by FRED-Fusion.
-    """
-    if "xzy2" in sys.modules:
-        return sys.modules["xzy2"]
+
+    
+    if "fred_fusion_core" in sys.modules:
+        return sys.modules["fred_fusion_core"]
 
     import importlib.util
 
     candidates = [
-        os.path.join(os.path.dirname(__file__), "..", "xzy2.py"),
-        os.path.join(os.path.dirname(__file__), "..", "..", "xzy2.py"),
-        "xzy2.py",
+        os.path.join(os.path.dirname(__file__), "..", "fred_fusion_core.py"),
+        os.path.join(os.path.dirname(__file__), "..", "..", "fred_fusion_core.py"),
+        "fred_fusion_core.py",
     ]
     for cand in candidates:
         cand = os.path.abspath(cand)
         if os.path.exists(cand):
-            spec = importlib.util.spec_from_file_location("xzy2", cand)
+            spec = importlib.util.spec_from_file_location("fred_fusion_core", cand)
             mod  = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
-            sys.modules["xzy2"] = mod
+            sys.modules["fred_fusion_core"] = mod
             return mod
 
     raise ImportError(
-        "Cannot locate xzy2.py. Place it in the project root directory "
+        "Cannot locate fred_fusion_core.py. Place it in the project root directory "
         "or add its location to sys.path before importing FREDFusionDetector."
     )
 
@@ -116,7 +115,7 @@ class FREDFusionDetector:
         Called automatically on first .predict() call if not already loaded.
         """
         print(f"[FRED] Loading artifacts from {self.model_dir}")
-        xzy2 = _import_xzy2()
+        fred_fusion_core = _import_fred_fusion_core()
 
         # ── CLIP model ─────────────────────────────────────────────────────────
         ckpt_path = os.path.join(
@@ -137,15 +136,15 @@ class FREDFusionDetector:
         )
 
         base_clip, self.clip_preproc = clip.load(
-            xzy2.CLIP_MODEL_NAME, device="cpu"
+            fred_fusion_core.CLIP_MODEL_NAME, device="cpu"
         )
         base_clip = base_clip.float()
 
         ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
         num_domains = ckpt["num_domains"]
-        feat_dim    = ckpt.get("feat_dim", xzy2.CLIP_FEAT_DIM)
+        feat_dim    = ckpt.get("feat_dim", fred_fusion_core.CLIP_FEAT_DIM)
 
-        self.clip_model = xzy2.DomainAdversarialCLIP(
+        self.clip_model = fred_fusion_core.DomainAdversarialCLIP(
             clip_model=base_clip,
             num_domains=num_domains,
             feat_dim=feat_dim,
@@ -194,15 +193,15 @@ class FREDFusionDetector:
         print(f"[FRED] XGBoost ensemble loaded ({len(self.xgb_models)} models)")
 
         # ── Tabular extractor ──────────────────────────────────────────────────
-        self.tab_extractor = xzy2.TabularExtractor(
-            img_size=(xzy2.IMG_SIZE[0], xzy2.IMG_SIZE[1]),
-            parity_quality=xzy2.PARITY_QUALITY,
-            srm_order=xzy2.SRM_ORDER,
-            srm_t=xzy2.SRM_T,
+        self.tab_extractor = fred_fusion_core.TabularExtractor(
+            img_size=(fred_fusion_core.IMG_SIZE[0], fred_fusion_core.IMG_SIZE[1]),
+            parity_quality=fred_fusion_core.PARITY_QUALITY,
+            srm_order=fred_fusion_core.SRM_ORDER,
+            srm_t=fred_fusion_core.SRM_T,
         )
 
         self._device = device
-        self._xzy2   = xzy2
+        self._fred_fusion_core   = fred_fusion_core
         self._loaded = True
 
     @torch.no_grad()
@@ -223,7 +222,7 @@ class FREDFusionDetector:
         if not self._loaded:
             self.load()
 
-        xzy2 = self._xzy2
+        fred_fusion_core = self._fred_fusion_core
 
         # ── 1. Tabular forensic features ───────────────────────────────────────
         tab_rows  = []
