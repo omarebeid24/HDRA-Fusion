@@ -1,0 +1,21 @@
+# Model weights and checkpoints
+*.pt
+*.pth
+*.tar
+*.pkl
+*.json  # except router_meta.json — comment this out if needed
+
+# Cache and outputs
+cache/
+Run_*/
+__pycache__/
+*.pyc
+.npy
+
+# Python environment
+*.egg-info/
+dist/
+build/
+.env
+venv/
+sbi_venv/
