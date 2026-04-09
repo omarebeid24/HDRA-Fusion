@@ -1,6 +1,6 @@
 # HDRA-Fusion: Hybrid Detection with Routed Architecture for Manipulation-Aware AI Face Forgery Detection
 
-**Florida Institute of Technology — Master's Thesis**
+**Florida Institute of Technology**
 
 HDRA-Fusion is a manipulation-aware forensic detection framework that addresses a fundamental limitation of existing deepfake detectors: the assumption that a single model can handle all types of AI face forgery. GAN-synthetic face generation and face-swap manipulation produce entirely different forensic signatures and require dedicated specialist detectors. HDRA-Fusion explicitly separates the manipulation identification step from the detection step through a principled routing architecture.
 
@@ -37,33 +37,7 @@ Input Image
 | FRED-Fusion (Detector A) | GAN-synthetic face detection | CLIP ViT-B/32 + Domain Adversarial Training + XGBoost |
 | SBI (Detector B) | Face-swap detection | EfficientNet-B4, pretrained on FaceForensics++ |
 
----
 
-## Key Results
-
-**Primary Evaluation** (HumanFaces + RVF10K + OpenForensics Test — 69,348 unseen images):
-
-| Component | AUC | Accuracy | ECE |
-|---|---|---|---|
-| Router (manipulation-type) | 0.9726 | 93.25% | 0.0525 |
-| FRED-Fusion (GAN routed) | 0.9999 | 99.74% | 0.0028 |
-| SBI (face-swap routed) | 0.8847 | 81.93% | 0.1912 |
-| **HDRA-Fusion E2E** | **0.9308** | **85.98%** | **0.1474** |
-
-Face-swap detection raised from AUC 0.5029 (chance) to AUC 0.8847 through routing. Abstention rate: 1.2%.
-
-**External Validation** (SG3-CW14K — novel StyleGAN3 architecture, 63,902 images):
-
-| Component | AUC |
-|---|---|
-| Router | 0.9465 |
-| FRED-Fusion (GAN routed) | 0.9173 |
-| SBI (face-swap routed) | 0.8891 |
-| HDRA-Fusion E2E | 0.8471 |
-
-SBI AUC of 0.301 on GAN images confirms forensic task separation: applying a face-swap specialist to GAN-synthetic images actively inverts the detection signal.
-
----
 
 ## Repository Structure
 
@@ -160,7 +134,7 @@ Then download the **FFraw.tar** checkpoint from the [SBI releases page](https://
 The FRED-Fusion RVF10K fold checkpoint bundle (~560 MB) is hosted on GitHub Releases.
 
 1. Download **fred_fusion_RVF10K_checkpoint.zip** from:
-   [https://github.com/omarebeid24/HDRA-Fusion/releases/download/v1.0/fred_fusion_RVF10K_checkpoint.zip](https://github.com/omarebeid24/HDRA-Fusion/releases/download/v1.0/fred_fusion_RVF10K_checkpoint.zip)
+   [https://github.com/omarebeid24/HDRA-Fusion/releases/download/v1.0/fred_fusion_RVF10K_checkpoint.zip](https://github.com/omarebeid24/HDRA-Fusion/releases/download/1.0/FRED_FUSION_CHECKPOINT.zip)
 
 2. Unzip into a directory of your choice. You should get these files:
 
@@ -224,26 +198,6 @@ BASE_OUT = "/path/to/your/output/dir/"
 
 ---
 
-## Datasets
-
-The following datasets were used in the thesis experiments. Download links are provided for reproducibility.
-
-| Dataset | Type | Used for | Download |
-|---|---|---|---|
-| [140K Real and Fake Faces](https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces) | GAN-synthetic | Router training | Kaggle |
-| [HumanFaces](https://www.kaggle.com/datasets/fareselmenshawii/human-face-dataset) | GAN-synthetic | Evaluation | Kaggle |
-| [RVF10K](https://www.kaggle.com/datasets/hamzaboulahia/rvf10k) | GAN-synthetic | Evaluation | Kaggle |
-| [OpenForensics FaceCrops](https://zenodo.org/records/5547879) | Face-swap | Router training + Evaluation | Zenodo |
-| SG3-CW14K (ours) | GAN-synthetic | External validation | See below |
-
-### SG3-CW14K (independently assembled external validation dataset)
-
-SG3-CW14K is an independently assembled dataset of 14,184 images created for this thesis using StyleGAN3-generated synthetic faces and real faces from the Caltech 10K Web Faces dataset. It was used exclusively for external out-of-distribution validation and was never seen during any training phase.
-
-- **Fake images (7,092):** Generated using StyleGAN3-R pretrained on FFHQ 1024×1024 (truncation ψ=0.7, resized to 600×600 JPEG Q=95)
-- **Real images (7,092):** Sourced from [Caltech 10K Web Faces](http://www.vision.caltech.edu/html-files/WebFaces/)
-
----
 
 ## Usage
 
