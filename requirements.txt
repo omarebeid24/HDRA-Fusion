@@ -1,0 +1,80 @@
+# ==============================================================================
+# HDRA-Fusion — Python Dependencies
+# ==============================================================================
+# Thesis: HDRA-Fusion: Hybrid Detection with Routed Architecture for
+#         Manipulation-Aware AI Face Forgery Detection
+#         Florida Institute of Technology
+#
+# Install all dependencies:
+#   pip install -r requirements.txt
+#
+# Then install CLIP (not on PyPI):
+#   pip install git+https://github.com/openai/CLIP.git
+#
+# Python version: 3.9 or higher recommended
+# CUDA: 11.8 or higher recommended for GPU inference
+# ==============================================================================
+
+# ── Deep learning ──────────────────────────────────────────────────────────────
+torch>=2.0.0
+torchvision>=0.15.0
+
+# ── CLIP ──────────────────────────────────────────────────────────────────────
+# CLIP is not on PyPI. Install separately after this file:
+#   pip install git+https://github.com/openai/CLIP.git
+# The CLIP package requires ftfy and regex which are listed below.
+ftfy>=6.1.1
+regex>=2023.0.0
+
+# ── Machine learning ───────────────────────────────────────────────────────────
+scikit-learn>=1.2.0
+xgboost>=1.7.0
+
+# ── Numerical and scientific computing ────────────────────────────────────────
+numpy>=1.24.0
+scipy>=1.10.0
+
+# ── Image processing ───────────────────────────────────────────────────────────
+# Use opencv-python if running with a display, opencv-python-headless for servers
+opencv-python-headless>=4.7.0
+scikit-image>=0.20.0
+Pillow>=9.4.0
+
+# ── Data handling ──────────────────────────────────────────────────────────────
+pandas>=1.5.0
+
+# ── Plotting ───────────────────────────────────────────────────────────────────
+matplotlib>=3.6.0
+
+# ── Utilities ──────────────────────────────────────────────────────────────────
+joblib>=1.2.0
+tqdm>=4.64.0
+
+# ==============================================================================
+# SBI (Self-Blended Images) — Detector B
+# ==============================================================================
+# SBI is a separate repository and is NOT installed via pip.
+# Follow the setup instructions in docs/sbi_setup.md or README.md:
+#
+#   1. Clone the SBI repository:
+#      git clone https://github.com/mapooon/SelfBlendedImages.git
+#
+#   2. Set SBI_REPO_ROOT in configs/config.py to the cloned directory path.
+#
+#   3. Download the FFraw.tar checkpoint and place it in SBI_WEIGHTS_DIR.
+#      Checkpoint available at:
+#      https://github.com/mapooon/SelfBlendedImages/releases
+#
+#   4. Install SBI's own dependencies (EfficientNet-B4):
+#      pip install efficientnet-pytorch
+#
+# SBI dependency:
+efficientnet-pytorch>=0.7.1
+
+# ==============================================================================
+# FRED-Fusion Checkpoint
+# ==============================================================================
+# The FRED-Fusion model artifacts (~560 MB) are hosted on GitHub Releases.
+# Download fred_fusion_RVF10K_checkpoint.zip from:
+# https://github.com/omarebeid24/HDRA-Fusion/releases/download/v1.0/fred_fusion_RVF10K_checkpoint.zip
+# Unzip into your FRED_MODEL_DIR (set in configs/config.py).
