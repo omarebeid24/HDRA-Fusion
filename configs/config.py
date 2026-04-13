@@ -1,22 +1,6 @@
 """
-================================================================================
-HDRA-Fusion — Configuration
-================================================================================
-Thesis: HDRA-Fusion: Hybrid Detection with Routed Architecture for
-        Manipulation-Aware AI Face Forgery Detection
-        Florida Institute of Technology
-
 Edit the dataset paths below before running. All other hyperparameters
 are pre-set to the values used in the thesis experiments.
-
-DATA SPLIT DESIGN (leak-proof, mirrors LOSO philosophy):
-  ROUTER TRAINING  — sources the router learns from:
-    GAN       : 140K train split only
-    Face-swap : OpenForensics FaceCrops Train + Val splits
-
-  EVALUATION       — entirely unseen by the router during training:
-    GAN       : HumanFaces + RVF10K  (SG3-CW14K for external validation)
-    Face-swap : OpenForensics FaceCrops Test split only
 ================================================================================
 """
 
